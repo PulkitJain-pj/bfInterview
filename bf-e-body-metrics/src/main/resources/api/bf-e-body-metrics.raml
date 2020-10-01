@@ -1,0 +1,14 @@
+#%RAML 1.0
+title: bf-e-body-metrics
+version: v1
+baseUri: https://localhost:8081/basicfit/api/ehealthkit
+description: This is an Experience API that gives average body composition per week for specific user.
+resourceTypes:
+  bodyMetricsResourceType: !include resourceTypes/bodyMetricsResourceType.raml
+  
+/{version}:
+  /body-metrics:
+    /{userID}:
+      displayName: Get user body metrics
+      description: Get average for the values bmi, fat, weight by grouping based on the measure_date
+      type: bodyMetricsResourceType

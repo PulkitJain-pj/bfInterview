@@ -1,0 +1,43 @@
+{
+  "bodyMetrics": [
+    {
+      "week": 1,
+      "year": 2020,
+      "weight": 56.3,
+      "bodyComposition": {
+        "fat": 32.2,
+        "muscle": 38.5,
+        "boneMass": 30.0
+      }
+    },
+    {
+      "week": 2,
+      "year": 2020,
+      "weight": 56.2,
+      "bodyComposition": {
+        "fat": 29.5,
+        "muscle": 38.9,
+        "boneMass": 30.1
+      }
+    },
+    {
+      "week": 3,
+      "weight": 55.4,
+      "bodyComposition": {
+        "fat": 26.2,
+        "muscle": 39.2,
+        "boneMass": 30.0
+      }
+    },
+    {
+      "week": 4,
+      "year": 2020,
+      "weight": 54.7,
+      "bodyComposition": {
+        "fat": 25.7,
+        "muscle": 39.5,
+        "boneMass": 30
+      }
+    }
+  ]
+}

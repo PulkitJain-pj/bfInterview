@@ -1,0 +1,14 @@
+#%RAML 1.0
+title: bf-s-body-metrics-api
+version: v1
+baseUri: https://localhost:8081/basicfit/api/shealthkit
+description: This is an Sytem API which fetch user data from source system which here is xlsx file. 
+resourceTypes:
+  bodyMetricsResourceType: !include resourceTypes/bodyMetricsResourceType.raml
+
+  
+/{version}:
+  /body-metrics:
+    displayName: Get user body metrics
+    description: Get average for the values bmi, fat, weight by grouping based on the measure_date
+    type: bodyMetricsResourceType

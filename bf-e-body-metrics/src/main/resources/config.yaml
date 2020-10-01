@@ -1,0 +1,9 @@
+http_listener:
+  port : "8087"
+  
+http_request:
+  host : "localhost"
+  port : "8081"
+  maxConnections : "-1"
+  timeout : "30000"
+  

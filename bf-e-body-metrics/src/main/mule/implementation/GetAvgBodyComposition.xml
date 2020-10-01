@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="getAvgBodyCompositionFlow" doc:id="111c7929-ef55-4cb2-acb6-f68d52c80f3a" >
+	<logger level="INFO" doc:name="setStartInfo" doc:id="6214cb5e-77bd-49f0-82fd-c2d31ba9888c" message="#[&quot;GetAvgBodyCompositionFlow Flow started at &quot; ++ now() ++ &quot; for user &quot; ++ attributes.uriParams.'userID']"/>
+		<http:request method="GET" doc:name="getBodyMetrics" doc:id="960898a3-7dc6-487a-94c6-19d85dd517d8" config-ref="getBodyMetrics_HTTP_Request" path="basicfit/api/shealthkit/v1/body-metrics">
+			<http:query-params><![CDATA[#[output application/java
+---
+{
+	userID : attributes.uriParams.'userID'
+}]]]></http:query-params>
+		</http:request>
+		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="44c9e712-9365-4269-b99a-b4b4c61adf8d" doc:name="groupByWeek_Year">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+import * from dw::core::Strings
+output application/json
+---
+payload map {
+    userID: $.userID,
+    measureType: $.measureType,
+    measureValue: $.measureValue,
+    measureUnit: $.measureUnit,
+    year: substringBefore($.measureDate,"-"),
+    week: $.measureDate as LocalDateTime {format: "yyyy-MM-dd HH:mm:ss.SSS"} as Date {format: "yyyy-MM-dd"} as String {format: "w"}
+} groupBy ($.week++'_'++$.year)]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<ee:transform doc:name="setBodyMetricsResponse" doc:id="e4443cba-644b-4878-88fc-ee9f7382c1eb">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+import * from dw::core::Strings
+import totalMeasureValue from modules::TotalMeasure
+output application/json
+---
+{
+bodyMetrics:
+payload mapObject ((value, key, index) ->
+response: {
+	week: substringBefore(key,"_"),
+	year: substringAfter(key,"_"),
+	weight: if(isEmpty(totalMeasureValue(value, "weight"))) 0 else avg(totalMeasureValue(value, "weight")) as String {format: "#.0"},
+	bodyComposition: {
+		fat: if(isEmpty(totalMeasureValue(value, "fat"))) 0 else avg(totalMeasureValue(value, "fat")) as String {format: "#.0"},
+		boneMass: if(isEmpty(totalMeasureValue(value, "bmi"))) 0 else avg(totalMeasureValue(value, "bmi")) as String {format: "#.0"}
+		}
+	}	
+) pluck($)
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="setEndInfo" doc:id="fe8d043e-0ffd-45c7-90b1-5b3593c5da11" message='#["GetAvgBodyCompositionFlow Flow ended at " ++ now()]'/>
+        
+</flow>
+</mule>

@@ -1,0 +1,42 @@
+#%RAML 1.0 Library
+usage: Use this trait for including the commonly used headers in your requests.
+ 
+types:
+  LanguageId:
+    description: The preferred language code of the end user.
+    enum:
+      - EN
+      - NL
+  ChannelId:
+    description: Identifier to specify source of the call.
+    enum:
+      - APP
+      - WEB
+  ExternalId:
+    description: Unique identifier from external system consuming the API.
+    type: string
+  CorrelationId:
+    description: Unique identifier for identifying the execution flow.
+    type: string
+  Who:
+    description: The partyId of the actor performing the action.
+    type: string
+  ForWhom:
+    description: The partyId of the user for whom the action is being performed.
+    type: string
+traits:
+  internalHeaders:
+    headers:
+      languageId?: LanguageId
+      channelId?: ChannelId
+      externalId?: ExternalId
+      correlationId?: CorrelationId
+      who?: Who
+      forWhom?: ForWhom
+  externalHeaders:
+    headers:
+      languageId?: LanguageId
+      channelId?: ChannelId
+      externalId?: ExternalId
+      who?: Who
+      forWhom?: ForWhom

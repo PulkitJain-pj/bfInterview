@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	
+	<flow name="getBodyMetricsFlow" doc:id="fcb4f813-e89d-4972-be48-cae847908031" >
+	<logger level="INFO" doc:name="setStartInfo" doc:id="c37e2e7a-2a85-48d8-9821-2e9e4833db69" message='#["GetBodyMetrics Flow started at " ++ now()]'/>
+		<set-variable value="#[message.attributes.queryParams.userID]" doc:name="setUserID" doc:id="6f4dfa46-d3e5-4cb2-9bb6-7dbd00c83dc9" variableName="UserID" />
+		<logger level="INFO" doc:name="logUserID" doc:id="d986cd1d-7d34-4564-93f2-57f0ca8d6c61" message="#[vars.UserID]"/>
+		<file:read doc:name="readBodyMetricsData" doc:id="db07000c-aca4-455b-ba6e-646dfa559019" config-ref="getBodyMetricsData_FILE" path="${file_path}" outputMimeType="application/xlsx"/>
+		<choice doc:name="ifUserIDExists" doc:id="054792fe-1c87-41b4-abf5-53606f297603" >
+			<when expression="#[isEmpty(vars.UserID)]">
+				<ee:transform doc:name="mapMetricsResponse" doc:id="e82b8fc0-7d19-4889-a8fa-613e77d25a4b" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+
+payload."Sheet2" map {
+    userID: $.User_ID,
+    measureType: $.Measure_type,
+    measureValue: $.Value,
+    measureUnit: $.Unit,
+    measureDate: $.measure_date
+}
+ 
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:name="mapMetricsResponsePerUser" doc:id="1ae7b402-4c9e-43f8-93ec-24b2b910ec33">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+
+payload."Sheet2" filter ($.User_ID == vars.UserID as Number) map {
+    userID: $.User_ID,
+    measureType: $.Measure_type,
+    measureValue: $.Value,
+    measureUnit: $.Unit,
+    measureDate: $.measure_date
+}
+ 
+]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="setEndInfo" doc:id="3c1042ff-55db-47d3-87cd-fa90da533c07" message='#["GetBodyMetrics Flow ended at " ++ now()]'/>
+        
+</flow>
+</mule>

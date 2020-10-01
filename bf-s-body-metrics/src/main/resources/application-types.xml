@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="bodyMetricsSchema_XLSX" format="excel">
+      <types:shape format="weave"><![CDATA[%dw 2.0
+
+type bodyMetricsSchema_XLSX = {|
+  Sheet2?: Array<{|    User_ID: Number,     Measure_type: String,     Value: Number,     Unit: String,     measure_date: String  |}>
+|}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#1ae7b402-4c9e-43f8-93ec-24b2b910ec33">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="bodyMetricsSchema_XLSX"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#e82b8fc0-7d19-4889-a8fa-613e77d25a4b">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="bodyMetricsSchema_XLSX"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

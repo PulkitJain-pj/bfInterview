@@ -1,0 +1,23 @@
+#%RAML 1.0 ResourceType
+
+uses:
+  Headers: /exchange_modules/7838b237-945d-4adc-8266-68764d308030/common-header-library/1.0.1/bf-common-header-library.raml
+  HealthKit: /exchange_modules/7838b237-945d-4adc-8266-68764d308030/bf-response-library/1.0.6/bf-common-response-library.raml
+  
+uriParameters:
+  userID:
+    type: integer 
+    example: '1111'
+get:
+  description: Returns average for the values bmi, fat, weight by grouping based on the measure_date
+  responses:
+    200:
+      body:
+        application/json:
+          type: HealthKit.AvgBodyMetrics
+          examples:
+            output: !include /examples/bodyMetricsResponse.json
+                         
+  is:
+    - Headers.externalHeaders
+    

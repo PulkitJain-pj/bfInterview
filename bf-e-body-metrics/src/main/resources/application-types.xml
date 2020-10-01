@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="getBodyMetrics_JSON" format="json">
+      <types:shape format="weave" example="examples/bodyMetrics-example.json"><![CDATA[%dw 2.0
+
+type getBodyMetrics_JSON = Array<{|  userID: Number {"typeId": "int"},   measureType: String,   measureValue: Number {"typeId": "int"},   measureUnit: String,   measureDate: String|}> {"example": "[{\\\"userID\\\":1111,\\\"measureType\\\":\\\"bmi\\\",\\\"measureValue\\\":22,\\\"measureUnit\\\":\\\"\\\",\\\"measureDate\\\":\\\"2019-05-25 19:08:52.000\\\"},{\\\"userID\\\":1111,\\\"measureType\\\":\\\"weight\\\",\\\"measureValue\\\":56.2,\\\"measureUnit\\\":\\\"kg\\\",\\\"measureDate\\\":\\\"2019-05-25 19:08:52.000\\\"},{\\\"userID\\\":2222,\\\"measureType\\\":\\\"fat\\\",\\\"measureValue\\\":22,\\\"measureUnit\\\":\\\"%\\\",\\\"measureDate\\\":\\\"2019-05-25 19:08:52.000\\\"},{\\\"userID\\\":2222,\\\"measureType\\\":\\\"weight\\\",\\\"measureValue\\\":56.2,\\\"measureUnit\\\":\\\"kg\\\",\\\"measureDate\\\":\\\"2019-05-25 19:08:52.000\\\"}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#44c9e712-9365-4269-b99a-b4b4c61adf8d">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="getBodyMetrics_JSON"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

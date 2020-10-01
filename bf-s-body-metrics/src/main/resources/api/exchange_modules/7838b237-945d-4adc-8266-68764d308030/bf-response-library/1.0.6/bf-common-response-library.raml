@@ -1,0 +1,54 @@
+#%RAML 1.0 Library
+usage: Use this trait for including the common responses.
+ 
+types:
+  BodyMetrics:
+    description: Defines body composition data for users.
+    type: object
+    properties:
+      userID:
+        type: integer
+        description: Unique ID of the user
+      measureType?:
+        type: string
+        description: Type of metrics taken for the body.
+      measureValue?:
+        type: number
+        description: Value of the metrics.
+      measureUnit?:
+        type: string
+        description: Unit of the metrics.
+      measureDate?:
+        type: string
+        description: Date time when metrics was recorded
+    
+  
+  AvgBodyMetrics:
+    description: Defines avg body composition fields for user.
+    type: object
+    properties:
+      bodyMetrics:
+        type: array
+        items:
+          properties:            
+            week?:
+              type: integer
+              description: Week of the year when measurement was taken.
+            year?:
+              type: integer
+              description: Year when measurement was taken.
+            weight?:
+              type: number
+              description: Average weight per week
+            bodyComposition?:
+              type: object
+              properties:
+                fat?:
+                  type: number
+                  description: Average fat percentage per week
+                muscle?:
+                  type: number
+                  description: Average muscle mass per week
+                boneMass?:
+                  type: number
+                  description: Average boneMass per week

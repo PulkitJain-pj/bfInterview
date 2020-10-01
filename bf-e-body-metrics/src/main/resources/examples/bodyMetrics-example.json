@@ -1,0 +1,30 @@
+[
+  {
+    "userID": 1111,
+    "measureType": "bmi",
+    "measureValue": 22,
+    "measureUnit": "",
+    "measureDate": "2019-05-25 19:08:52.000"
+  },
+  {
+    "userID": 1111,
+    "measureType": "weight",
+    "measureValue": 56.2,
+    "measureUnit": "kg",
+    "measureDate": "2019-05-25 19:08:52.000"
+  },
+  {
+    "userID": 2222,
+    "measureType": "fat",
+    "measureValue": 22,
+    "measureUnit": "%",
+    "measureDate": "2019-05-25 19:08:52.000"
+  },
+  {
+    "userID": 2222,
+    "measureType": "weight",
+    "measureValue": 56.2,
+    "measureUnit": "kg",
+    "measureDate": "2019-05-25 19:08:52.000"
+  }
+]
